@@ -2,8 +2,23 @@ export interface Env {
   GEMINI_API_KEY: string
 }
 
+function corsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  }
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(),
+      })
+    }
+
     if (req.method !== "POST") {
       return new Response("Method Not Allowed", { status: 405 })
     }
